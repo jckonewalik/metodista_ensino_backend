@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js --ignore __tests__",
-    "pretest": "NODE_ENV=test sequelize db:migrate",
-    "test": "NODE_ENV=test jest",
-    "posttest": "NODE_ENV=test sequelize db:migrate:undo:all"
+    "pretest": "cross-env NODE_ENV=test sequelize db:migrate",
+    "test": "cross-env NODE_ENV=test jest",
+    "posttest": "cross-env NODE_ENV=test sequelize db:migrate:undo:all"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,10 +17,10 @@
     "factory-girl": "^5.0.4",
     "jsonwebtoken": "^8.5.1",
     "pg": "^7.14.0",
-    "sequelize": "^5.21.2",
-    "win-node-env": "^0.4.0"
+    "sequelize": "^5.21.2"
   },
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "faker": "^4.1.0",
     "jest": "^24.9.0",
     "nodemon": "^2.0.2",
