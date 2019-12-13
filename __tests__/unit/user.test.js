@@ -4,7 +4,7 @@ const truncate = require('../utils/truncate');
 
 describe('User', () => {
   beforeEach(async () => {
-    await truncate();
+    await truncate([User]);
   });
 
   it('should encrypt user password', async () => {

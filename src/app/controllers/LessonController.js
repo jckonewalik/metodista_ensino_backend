@@ -9,9 +9,14 @@ class LessonController {
   async store(req, res) {
     const { number, name, active, courseId } = req.body;
     if (!courseId) {
-      res.status(401).json({ message: 'Informe o curso dessa lição' });
+      return res.status(401).json({ message: 'Informe o curso dessa lição' });
     }
-    const lesson = await Lesson.create({ number, name, active });
+    if (await Lesson.findOne({ where: { number, courseId } })) {
+      return res
+        .status(401)
+        .json({ message: `A lição ${number} já foi cadastrada nesse curso` });
+    }
+    const lesson = await Lesson.create({ number, name, active, courseId });
     return res.json({ lesson });
   }
 }

@@ -1,9 +1,9 @@
 const { sequelize } = require('../../src/app/models');
 
-module.exports = () => {
+module.exports = models => {
   return Promise.all(
-    Object.keys(sequelize.models).map(key => {
-      return sequelize.models[key].destroy({ truncate: true, force: true });
+    models.map(model => {
+      return model.destroy({ truncate: true, force: true });
     })
   );
 };

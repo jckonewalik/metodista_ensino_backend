@@ -1,12 +1,13 @@
 const routes = require('express').Router();
-const { User } = require('./app/models');
 const SessionController = require('./app/controllers/SessionController');
 const LessonController = require('./app/controllers/LessonController');
-
-User.create({ email: 'jckonewalik@gmail.com', password: '123', name: 'Joao' });
+const CourseController = require('./app/controllers/CourseController');
 
 routes.post('/sessions', SessionController.store);
 
 routes.get('/lessons', LessonController.show);
 routes.post('/lessons', LessonController.store);
+
+routes.get('/courses', CourseController.show);
+routes.post('/courses', CourseController.store);
 module.exports = routes;

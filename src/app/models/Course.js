@@ -1,14 +1,12 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Course = sequelize.define(
-    'Course',
-    {
-      name: DataTypes.STRING,
-    },
-    {}
-  );
+  const Course = sequelize.define('Course', {
+    name: DataTypes.STRING,
+    active: DataTypes.BOOLEAN,
+  });
   Course.associate = function(models) {
-    // associations can be defined here
+    Course.hasMany(models.Lesson, {
+      as: 'lessons',
+    });
   };
   return Course;
 };
