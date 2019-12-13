@@ -1,4 +1,4 @@
-/node_modules
-/__tests__/database.sqlite
+node_modules
+__tests__/database.sqlite
 .env
 .env.test
