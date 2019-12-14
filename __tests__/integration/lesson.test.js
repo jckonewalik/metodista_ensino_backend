@@ -6,7 +6,7 @@ const factory = require('../factories');
 
 describe('Lessons', () => {
   beforeEach(async () => {
-    await truncate([Lesson, Course]);
+    await truncate();
   });
 
   it('should access lesson get endpoint', async () => {

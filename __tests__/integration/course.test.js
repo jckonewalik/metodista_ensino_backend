@@ -5,7 +5,7 @@ const truncate = require('../utils/truncate');
 const { Course } = require('../../src/app/models');
 describe('Course', () => {
   beforeEach(async () => {
-    await truncate([Course]);
+    await truncate();
   });
   it('should create a new course', async () => {
     const response = await request(app)
@@ -21,7 +21,10 @@ describe('Course', () => {
   });
   it('should return a list of active courses', async () => {
     const course1 = await Course.create({ name: 'CDV', active: true });
-    const course2 = await Course.create({ name: 'Fundamentos da Fé', active: false });
+    const course2 = await Course.create({
+      name: 'Fundamentos da Fé',
+      active: false,
+    });
     const response = await request(app)
       .get('/courses')
       .query({ active: 'true' });

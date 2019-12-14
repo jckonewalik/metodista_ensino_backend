@@ -5,7 +5,7 @@ const factory = require('../factories');
 const { User } = require('../../src/app/models');
 describe('Authentication', () => {
   beforeEach(async () => {
-    await truncate([User]);
+    await truncate();
   });
   it('should authenticate with valid credentials', async () => {
     const user = await factory.create('User', { password: '123123' });
