@@ -2,7 +2,13 @@ const { Lesson } = require('../models');
 
 class LessonController {
   async show(req, res) {
-    const lessons = await Lesson.findAll({ where: { active: true } });
+    const { active } = req.query;
+    let where;
+
+    if (active) {
+      where = { where: { active: active === 'true' } };
+    }
+    const lessons = await Lesson.findAll(where);
     return res.json({ lessons });
   }
 

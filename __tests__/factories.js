@@ -8,11 +8,6 @@ factory.define('User', User, {
   password: faker.internet.password,
 });
 
-factory.define('Course', Course, {
-  name: 'Fundamentos da Fé',
-  active: true,
-});
-
 factory.define('Lesson', Lesson, {
   number: 1,
   name: 'Pecado',

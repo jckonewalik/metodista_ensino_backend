@@ -1,12 +1,12 @@
 const request = require('supertest');
 const app = require('../../src/app');
 const truncate = require('../utils/truncate');
-const { Lesson } = require('../../src/app/models');
+const { Lesson, Course } = require('../../src/app/models');
 const factory = require('../factories');
 
 describe('Lessons', () => {
   beforeEach(async () => {
-    await truncate([Lesson]);
+    await truncate([Lesson, Course]);
   });
 
   it('should access lesson get endpoint', async () => {
@@ -15,7 +15,7 @@ describe('Lessons', () => {
   });
 
   it('should return a list of active lessons', async () => {
-    const course = await factory.create('Course');
+    const course = await Course.create({ name: 'Fundamentos', active: true });
     const lesson1 = await factory.create('Lesson');
     await lesson1.setCourse(course);
 
@@ -26,13 +26,16 @@ describe('Lessons', () => {
     });
     await lesson2.setCourse(course);
 
-    const response = await request(app).get('/lessons');
+    const response = await request(app)
+      .get('/lessons')
+      .query({ active: 'true' });
+
     const { lessons } = response.body;
     expect(lessons.length).toBe(1);
   });
 
   it('should include a new lesson', async () => {
-    const course = await factory.create('Course');
+    const course = await Course.create({ name: 'Fundamentos', active: true });
     const response = await request(app)
       .post('/lessons')
       .send({
@@ -57,7 +60,7 @@ describe('Lessons', () => {
     expect(response.status).toBe(401);
   });
   it('should not create a lesson with same number and course id', async () => {
-    const course = await factory.create('Course');
+    const course = await Course.create({ name: 'Fundamentos', active: true });
     const lesson = await factory.create('Lesson');
     await lesson.setCourse(course);
 

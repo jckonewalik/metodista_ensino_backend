@@ -20,9 +20,11 @@ describe('Course', () => {
     expect(response.status).toBe(200);
   });
   it('should return a list of active courses', async () => {
-    const course1 = await factory.create('Course');
-    const course2 = await factory.create('Course', { active: false });
-    const response = await request(app).get('/courses');
+    const course1 = await Course.create({ name: 'CDV', active: true });
+    const course2 = await Course.create({ name: 'Fundamentos da Fé', active: false });
+    const response = await request(app)
+      .get('/courses')
+      .query({ active: 'true' });
     const { courses } = response.body;
     expect(courses.length).toBe(1);
   });

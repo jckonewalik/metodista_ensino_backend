@@ -10,7 +10,13 @@ class CourseController {
     }
   }
   async show(req, res) {
-    const courses = await Course.findAll({ where: { active: true } });
+    const { active } = req.query;
+    let where;
+
+    if (active) {
+      where = { where: { active: active === 'true' } }
+    }
+    const courses = await Course.findAll(where);
     return res.json({ courses });
   }
 }
