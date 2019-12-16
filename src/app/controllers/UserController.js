@@ -5,7 +5,7 @@ class UserController {
     try {
       const user = await User.create({
         name,
-        email: `${email.toLowerCase()}`,
+        email,
         password,
       });
       return res.json({ user });

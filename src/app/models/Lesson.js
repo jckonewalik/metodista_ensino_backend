@@ -4,11 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     active: DataTypes.BOOLEAN,
   });
-  Lesson.associate = function (models) {
-    Lesson.belongsTo(models.Course, {
-      as: 'course',
-      constraints: true
-    });
+  Lesson.associate = function(models) {
+    Lesson.belongsTo(models.Course);
   };
   return Lesson;
 };

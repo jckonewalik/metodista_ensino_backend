@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeSave: async user => {
+          user.email = user.email.toLowerCase();
           if (user.password) {
             user.password_hash = await bcrypt.hash(user.password, 8);
           }

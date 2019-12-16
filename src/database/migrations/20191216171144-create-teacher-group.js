@@ -1,24 +1,26 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('lessons', {
+    return queryInterface.createTable('teacher_groups', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      number: {
-        allowNull: false,
+      teacher_id: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'teachers',
+          key: 'id',
+        },
       },
-      name: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      active: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
+      group_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'groups',
+          key: 'id',
+        },
       },
       created_at: {
         allowNull: false,
@@ -31,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('lessons');
+    return queryInterface.dropTable('teacher_groups');
   },
 };

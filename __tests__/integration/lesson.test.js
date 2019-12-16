@@ -16,15 +16,14 @@ describe('Lessons', () => {
 
   it('should return a list of active lessons', async () => {
     const course = await Course.create({ name: 'Fundamentos', active: true });
-    const lesson1 = await factory.create('Lesson');
-    await lesson1.setCourse(course);
+    await factory.create('Lesson', { CourseId: course.id });
 
-    const lesson2 = await factory.create('Lesson', {
+    await factory.create('Lesson', {
       number: 2,
       name: 'Arrependimento',
       active: false,
+      CourseId: course.id,
     });
-    await lesson2.setCourse(course);
 
     const response = await request(app)
       .get('/lessons')
@@ -42,7 +41,7 @@ describe('Lessons', () => {
         number: 1,
         name: 'Batismo',
         active: true,
-        courseId: course.id,
+        CourseId: course.id,
       });
     const created = response.body.lesson;
     const lesson = await Lesson.findOne({ where: { id: created.id } });
@@ -61,8 +60,7 @@ describe('Lessons', () => {
   });
   it('should not create a lesson with same number and course id', async () => {
     const course = await Course.create({ name: 'Fundamentos', active: true });
-    const lesson = await factory.create('Lesson');
-    await lesson.setCourse(course);
+    await factory.create('Lesson', { CourseId: course.id });
 
     const response = await request(app)
       .post('/lessons')
@@ -70,7 +68,18 @@ describe('Lessons', () => {
         number: 1,
         name: 'Batismo',
         active: true,
-        courseId: course.id,
+        CourseId: course.id,
+      });
+    expect(response.status).toBe(401);
+  });
+  it('should return an error when create a lesson with reference an course that doesnt exists', async () => {
+    const response = await request(app)
+      .post('/lessons')
+      .send({
+        number: 1,
+        name: 'Batismo',
+        active: true,
+        CourseId: 1,
       });
     expect(response.status).toBe(401);
   });
