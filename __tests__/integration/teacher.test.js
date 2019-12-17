@@ -38,6 +38,23 @@ describe('Teacher', () => {
     expect(response.status).toBe(400);
   });
 
+  it('should not create a two teachers with the same user', async () => {
+    const user = await factory.create('User');
+    await factory.create('Teacher', { UserId: user.id });
+    const response = await request(app)
+      .post('/teachers')
+      .send({
+        birthDate: '1991-06-19',
+        firstName: 'João Carlos',
+        gender: 'male',
+        lastName: 'de Souza',
+        middleName: 'Konewalik',
+        UserId: user.id,
+      });
+
+    expect(response.status).toBe(400);
+  });
+
   it('should return a list of teachers', async () => {
     const response = await request(app).get('/teachers');
     expect(response.status).toBe(200);

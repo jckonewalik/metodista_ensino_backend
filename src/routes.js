@@ -18,6 +18,7 @@ routes.get('/teachers', TeacherController.list);
 routes.get('/teachers/:id', TeacherController.show);
 
 routes.post('/students-classes', StudentsClassController.store);
+routes.put('/students-classes/:id', StudentsClassController.update);
 
 routes.get('/courses', CourseController.show);
 routes.post('/courses', CourseController.store);

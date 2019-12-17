@@ -1,5 +1,5 @@
 const { factory } = require('factory-girl');
-const { Teacher, Lesson, User } = require('../src/app/models');
+const { Teacher, Lesson, User, StudentsClass } = require('../src/app/models');
 const faker = require('faker');
 
 factory.define('User', User, {
@@ -19,11 +19,12 @@ factory.define('Teacher', Teacher, {
   lastName: faker.name.lastName(),
   gender: 'male',
   birthDate: faker.date.past(),
-  // UserId: User.create({
-  //   name: faker.name.findName(),
-  //   email: faker.internet.email(),
-  //   password: faker.internet.password(),
-  // }).then(user => user.id),
+});
+
+factory.define('StudentsClass', StudentsClass, {
+  name: 'Fundamentos da Fé',
+  description: '2° sem - 2019',
+  active: true,
 });
 
 module.exports = factory;

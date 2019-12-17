@@ -9,6 +9,14 @@ class TeacherController {
       birthDate,
       UserId,
     } = req.body;
+    if (UserId) {
+      const teacher = await Teacher.findOne({ where: { UserId } });
+      if (teacher) {
+        return res.status(400).send({
+          message: 'O usuário informado já esta cadastrado como professor',
+        });
+      }
+    }
     try {
       const teacher = await Teacher.create({
         firstName,

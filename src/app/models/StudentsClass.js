@@ -13,12 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     StudentsClass.belongsTo(models.Course, {
       constraints: false,
     });
-    StudentsClass.belongsToMany(models.Teacher, {
-      through: 'teacher_students_class',
-      as: 'teachers',
-      foreingKey: 'id',
-      otherKey: 'teacher_id',
-    });
   };
   return StudentsClass;
 };
