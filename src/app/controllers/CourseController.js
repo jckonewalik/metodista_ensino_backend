@@ -6,7 +6,7 @@ class CourseController {
       const course = await Course.create({ name, active });
       return res.json({ course });
     } catch (error) {
-      return res.status(401).json({ message: error.errors[0].message });
+      return res.status(400).json({ message: error.errors[0].message });
     }
   }
   async show(req, res) {
@@ -14,7 +14,7 @@ class CourseController {
     let where;
 
     if (active) {
-      where = { where: { active: active === 'true' } }
+      where = { where: { active: active === 'true' } };
     }
     const courses = await Course.findAll(where);
     return res.json({ courses });

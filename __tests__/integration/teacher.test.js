@@ -1,8 +1,12 @@
 const request = require('supertest');
 const app = require('../../src/app');
+const truncate = require('../utils/truncate');
 const { Teacher } = require('../../src/app/models');
 const factory = require('../factories');
 describe('Teacher', () => {
+  beforeEach(async () => {
+    await truncate();
+  });
   it('should create a new teacher', async () => {
     const user = await factory.create('User');
     const response = await request(app)
@@ -31,6 +35,26 @@ describe('Teacher', () => {
         lastName: 'de Souza',
         middleName: 'Konewalik',
       });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
+  });
+
+  it('should return a list of teachers', async () => {
+    const response = await request(app).get('/teachers');
+    expect(response.status).toBe(200);
+  });
+
+  it('should return a teacher when pass the id as parameter', async () => {
+    const user = await factory.create('User');
+    const newTeacher = await factory.create('Teacher', { UserId: user.id });
+    const response = await request(app).get(`/teachers/${newTeacher.id}`);
+
+    const { teacher } = response.body;
+    expect(response.status).toBe(200);
+    expect(teacher.name).toBe(newTeacher.name);
+  });
+
+  it('should return not content status when pass and id that not exists', async () => {
+    const response = await request(app).get(`/teachers/1`);
+    expect(response.status).toBe(204);
   });
 });

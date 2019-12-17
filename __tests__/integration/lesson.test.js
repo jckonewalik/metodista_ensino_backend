@@ -56,7 +56,7 @@ describe('Lessons', () => {
         name: 'Batismo',
         active: true,
       });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
   });
   it('should not create a lesson with same number and course id', async () => {
     const course = await Course.create({ name: 'Fundamentos', active: true });
@@ -70,7 +70,7 @@ describe('Lessons', () => {
         active: true,
         CourseId: course.id,
       });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
   });
   it('should return an error when create a lesson with reference an course that doesnt exists', async () => {
     const response = await request(app)
@@ -81,6 +81,6 @@ describe('Lessons', () => {
         active: true,
         CourseId: 1,
       });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
   });
 });

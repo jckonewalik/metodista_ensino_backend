@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('teacher_groups', {
+    return queryInterface.createTable('teacher_students_class', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -15,10 +15,10 @@ module.exports = {
           key: 'id',
         },
       },
-      group_id: {
+      students_class_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'groups',
+          model: 'students_classes',
           key: 'id',
         },
       },
@@ -33,6 +33,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('teacher_groups');
+    return queryInterface.dropTable('teacher_students_class');
   },
 };

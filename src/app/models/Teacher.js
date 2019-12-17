@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   );
   Teacher.associate = function(models) {
     Teacher.belongsTo(models.User);
-    Teacher.belongsToMany(models.Group, {
-      through: 'teacher_groups',
-      as: 'groups',
+    Teacher.belongsToMany(models.StudentsClass, {
+      through: 'teacher_students_class',
+      as: 'studentsClasses',
       foreingKey: 'teacher_id',
-      otherKey: 'group_id',
+      otherKey: 'students_class_id',
     });
   };
   return Teacher;

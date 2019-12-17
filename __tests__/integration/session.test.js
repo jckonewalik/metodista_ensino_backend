@@ -26,7 +26,7 @@ describe('Authentication', () => {
         email: user.email,
         password: '123',
       });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
   });
 
   it('should return jwt token when authenticated', async () => {

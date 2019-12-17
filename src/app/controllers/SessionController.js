@@ -8,10 +8,10 @@ class SessionController {
       where: { email: `${email.toLowerCase()}` },
     });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Invalid email or password' });
     }
     if (!(await user.checkPassword(password))) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Invalid email or password' });
     }
 
     return res.json({ user, token: user.generateToken() });
