@@ -1,4 +1,4 @@
-const { Teacher } = require('../models');
+const { Teacher, StudentsClass } = require('../models');
 class TeacherController {
   async store(req, res) {
     const {
@@ -46,7 +46,16 @@ class TeacherController {
 
   async show(req, res) {
     const { id } = req.params;
-    const teacher = await Teacher.findByPk(id);
+    const teacher = await Teacher.findByPk(id, {
+      include: [
+        {
+          model: StudentsClass,
+          as: 'classes',
+          attributes: ['id', 'name', 'description'],
+          through: { attributes: [] },
+        },
+      ],
+    });
 
     if (!teacher) {
       return res

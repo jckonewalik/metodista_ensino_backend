@@ -68,6 +68,7 @@ describe('Teacher', () => {
     const { teacher } = response.body;
     expect(response.status).toBe(200);
     expect(teacher.name).toBe(newTeacher.name);
+    expect(teacher).toHaveProperty('classes');
   });
 
   it('should return not content status when pass and id that not exists', async () => {

@@ -51,12 +51,12 @@ describe('Students Class', () => {
         active: !myClass.active,
         teachers: [teacher1, teacher2],
       });
-
     const { studentsClass } = response.body;
 
     expect(response.status).toBe(200);
     expect(studentsClass).not.toBe(undefined);
     expect(studentsClass.active).toBe(!myClass.active);
-    // expect(studentsClass.teachers).toHaveLength(2);
+    expect(studentsClass).toHaveProperty('teachers');
+    expect(studentsClass.teachers).toHaveLength(2);
   });
 });
