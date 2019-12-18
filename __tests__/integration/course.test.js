@@ -13,7 +13,14 @@ describe('Course', () => {
       .send({ name: 'Fundamentos da Fé', active: true });
     const created = response.body.course;
     const course = await Course.findOne({ where: { id: created.id } });
-    expect(course).not.toBe(null);
+    expect(course).not.toBe(undefined);
+  });
+  it('should not create a course with same name', async () => {
+    const course1 = await Course.create({ name: 'Curso 1', active: true });
+    const response = await request(app)
+      .post('/courses')
+      .send({ name: course1.name, active: true });
+    expect(response.status).toBe(400);
   });
   it('should access courses get endpoint', async () => {
     const response = await request(app).get('/courses');

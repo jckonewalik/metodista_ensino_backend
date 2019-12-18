@@ -22,7 +22,7 @@ describe('Teacher', () => {
     const created = response.body.teacher;
     const newTeacher = await Teacher.findOne({ where: { id: created.id } });
 
-    expect(newTeacher).not.toBe(null);
+    expect(newTeacher).not.toBe(undefined);
   });
 
   it('should not create a new teacher without user', async () => {

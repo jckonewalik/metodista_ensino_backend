@@ -17,7 +17,9 @@ class StudentsClassController {
       await transaction.commit();
       return res.json({ studentsClass });
     } catch (error) {
-      if (transaction) await transaction.rollback();
+      if (transaction) {
+        await transaction.rollback();
+      }
       return res.status(400).json({ message: error.message });
     }
   }
@@ -25,17 +27,16 @@ class StudentsClassController {
   async update(req, res) {
     const { id } = req.params;
     const { teachers, ...data } = req.body;
+    let studentsClass = await StudentsClass.findByPk(id);
+    if (!studentsClass) {
+      return res.status(204).send();
+    }
+
     let transaction;
     try {
       transaction = await sequelize.transaction();
-      let studentsClass = await StudentsClass.findByPk(id);
-      if (!studentsClass) {
-        return res
-          .status(204)
-          .json({ message: `A turma com id ${id} não existe` });
-      }
       await studentsClass.update(data, { transaction });
-      if (teachers && teachers.length > 0) {
+      if (teachers) {
         await studentsClass.setTeachers(
           teachers.map(teacher => teacher.id),
           { transaction }
@@ -54,7 +55,9 @@ class StudentsClassController {
       });
       return res.json({ studentsClass });
     } catch (error) {
-      if (transaction) await transaction.rollback();
+      if (transaction) {
+        await transaction.rollback();
+      }
       return res.status(400).json({ message: error.message });
     }
   }

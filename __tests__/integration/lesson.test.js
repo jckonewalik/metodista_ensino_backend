@@ -45,7 +45,7 @@ describe('Lessons', () => {
       });
     const created = response.body.lesson;
     const lesson = await Lesson.findOne({ where: { id: created.id } });
-    expect(lesson).not.toBe(null);
+    expect(lesson).not.toBe(undefined);
   });
 
   it('should throw an excepcion when include a new lesson without course', async () => {
