@@ -27,8 +27,8 @@ module.exports = {
           model: 'courses',
           key: 'id',
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
       },
       created_at: {
         allowNull: false,

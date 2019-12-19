@@ -14,6 +14,7 @@ module.exports = {
           model: 'teachers',
           key: 'id',
         },
+        onDelete: 'cascade',
         type: Sequelize.INTEGER,
       },
       students_class_id: {
@@ -21,8 +22,8 @@ module.exports = {
         references: {
           model: 'students_classes',
           key: 'id',
-          onDelete: 'CASCADE',
         },
+        onDelete: 'cascade',
         type: Sequelize.INTEGER,
       },
       created_at: {
