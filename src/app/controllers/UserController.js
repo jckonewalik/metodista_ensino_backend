@@ -1,6 +1,9 @@
 const { User } = require('../models');
 class UserController {
   async store(req, res) {
+    if (!req.roles || req.roles.indexOf('ROLE_ADMIN') == -1) {
+      return res.status(401).json({ message: 'User without permissions' });
+    }
     const { name, email, password } = req.body;
     try {
       const user = await User.create({
