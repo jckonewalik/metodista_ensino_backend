@@ -14,7 +14,10 @@ class SessionController {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    return res.json({ user, token: user.generateToken() });
+    const { id, name } = user;
+    const token = user.generateToken();
+
+    return res.json({ user: { id, name, token } });
   }
 }
 

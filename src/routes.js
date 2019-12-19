@@ -5,7 +5,7 @@ const CourseController = require('./app/controllers/CourseController');
 const UserController = require('./app/controllers/UserController');
 const TeacherController = require('./app/controllers/TeacherController');
 const StudentsClassController = require('./app/controllers/StudentsClassController');
-
+const authMiddleware = require('./app/middlewares/auth');
 routes.post('/sessions', SessionController.store);
 
 routes.post('/users', UserController.store);
@@ -22,4 +22,8 @@ routes.put('/students-classes/:id', StudentsClassController.update);
 
 routes.get('/courses', CourseController.show);
 routes.post('/courses', CourseController.store);
+
+routes.use(authMiddleware);
+
+routes.get('/students-classes', StudentsClassController.list);
 module.exports = routes;

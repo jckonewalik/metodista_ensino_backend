@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       },
     }
   );
+  User.associate = function(models) {
+    User.hasOne(models.Teacher);
+  };
 
   User.prototype.checkPassword = function(password) {
     return bcrypt.compare(password, this.password_hash);

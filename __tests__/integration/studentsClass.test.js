@@ -62,4 +62,40 @@ describe('Students Class', () => {
 
     expect(response.status).toBe(204);
   });
+
+  it('should return a list containing just current users active classes', async () => {
+    const user = await factory.create('User');
+    const teacher = await factory.create('Teacher', { UserId: user.id });
+    const course = await Course.create({
+      name: 'Fundamentos da Fé',
+      active: true,
+    });
+    const class1 = await StudentsClass.create({
+      name: 'Turma 1',
+      description: 'Turma 1',
+      active: true,
+      CourseId: course.id,
+    });
+    await class1.setTeachers([teacher]);
+    const class2 = await StudentsClass.create({
+      name: 'Turma 2',
+      description: 'Turma 2',
+      active: false,
+      CourseId: course.id,
+    });
+    await class2.setTeachers([teacher]);
+    const class3 = await StudentsClass.create({
+      name: 'Turma 3',
+      description: 'Turma 3',
+      active: true,
+      CourseId: course.id,
+    });
+    const response = await request(app)
+      .get('/students-classes')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('studentsClasses');
+    expect(response.body.studentsClasses).toHaveLength(1);
+  });
 });

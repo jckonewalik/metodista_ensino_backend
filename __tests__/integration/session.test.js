@@ -47,6 +47,7 @@ describe('Authentication', () => {
         email: user.email,
         password: '123123',
       });
-    expect(response.body).toHaveProperty('token');
+    expect(response.body).toHaveProperty('user');
+    expect(response.body.user).toHaveProperty('token');
   });
 });

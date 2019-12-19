@@ -1,4 +1,4 @@
-const { StudentsClass, Teacher } = require('../models');
+const { StudentsClass, Teacher, User } = require('../models');
 const { sequelize } = require('../models');
 class StudentsClassController {
   async store(req, res) {
@@ -22,6 +22,24 @@ class StudentsClassController {
       }
       return res.status(400).json({ message: error.message });
     }
+  }
+
+  async list(req, res) {
+    const { userId } = req;
+    const teacher = await Teacher.findOne({
+      where: { UserId: userId },
+      attributes: [],
+      include: [
+        {
+          as: 'classes',
+          model: StudentsClass,
+          attributes: ['id', 'name', 'description'],
+          where: { active: true },
+          through: { attributes: [] },
+        },
+      ],
+    });
+    return res.json({ studentsClasses: teacher.classes });
   }
 
   async update(req, res) {
