@@ -1,15 +1,11 @@
 const request = require('supertest');
 const app = require('../../src/app');
 const truncate = require('../utils/truncate');
-const { Course, StudentsClass } = require('../../src/app/models');
+const { Role, Course, StudentsClass } = require('../../src/app/models');
 const factory = require('../factories');
 describe('Students Class', () => {
   beforeEach(async () => {
-    try {
-      await truncate();
-    } catch (error) {
-      console.log(error);
-    }
+    await truncate();
   });
   it('should create a new class', async () => {
     const user1 = await factory.create('User');
@@ -67,7 +63,12 @@ describe('Students Class', () => {
   });
 
   it('should return a list containing just current users active classes', async () => {
+    const role = await Role.create({
+      id: 'ROLE_ADMIN',
+      description: 'Administrator',
+    });
     const user = await factory.create('User');
+    await user.setRoles([role]);
     const teacher = await factory.create('Teacher', { UserId: user.id });
     const course = await Course.create({
       name: 'Fundamentos da Fé',
@@ -93,9 +94,10 @@ describe('Students Class', () => {
       active: true,
       CourseId: course.id,
     });
+    const token = await user.generateToken();
     const response = await request(app)
       .get('/students-classes')
-      .set('Authorization', `Bearer ${user.generateToken()}`);
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('studentsClasses');

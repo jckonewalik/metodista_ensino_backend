@@ -15,7 +15,7 @@ class SessionController {
     }
 
     const { id, name } = user;
-    const token = user.generateToken();
+    const token = await user.generateToken();
 
     return res.json({ user: { id, name, token } });
   }

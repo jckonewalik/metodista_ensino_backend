@@ -18,6 +18,7 @@ module.exports = async (req, res, next) => {
     }
 
     req.userId = (decoded && decoded.id) || null;
+    req.roles = (decoded && decoded.roles) || [];
 
     return next();
   } catch (err) {

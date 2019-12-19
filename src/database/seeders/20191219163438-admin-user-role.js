@@ -3,14 +3,11 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert(
-      'users',
+      'user_role',
       [
         {
-          id: 1,
-          name: 'Administrator',
-          email: 'administrator@metodistaensino.com.br',
-          password_hash:
-            '$2a$08$M4Oof16YdlBU6U5QL0PKNuvqCBiCt8tK19HGZQRXiqkMgkW1aUXGy',
+          user_id: 1,
+          role_id: 'ROLE_ADMIN',
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -20,6 +17,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Users', null, {});
+    return queryInterface.bulkDelete('user_role', null, {});
   },
 };
