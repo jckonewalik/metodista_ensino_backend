@@ -10,7 +10,9 @@ describe('Lessons', () => {
   });
 
   it('should access lesson get endpoint', async () => {
-    const response = await request(app).get('/lessons');
+    const response = await request(app)
+      .get('/lessons')
+      .set('Authorization', 'Bearer Test');
     expect(response.status).toBe(200);
   });
 
@@ -27,6 +29,7 @@ describe('Lessons', () => {
 
     const response = await request(app)
       .get('/lessons')
+      .set('Authorization', 'Bearer Test')
       .query({ active: 'true' });
 
     const { lessons } = response.body;
@@ -37,6 +40,7 @@ describe('Lessons', () => {
     const course = await Course.create({ name: 'Fundamentos', active: true });
     const response = await request(app)
       .post('/lessons')
+      .set('Authorization', 'Bearer Test')
       .send({
         number: 1,
         name: 'Batismo',
@@ -51,6 +55,7 @@ describe('Lessons', () => {
   it('should throw an excepcion when include a new lesson without course', async () => {
     const response = await request(app)
       .post('/lessons')
+      .set('Authorization', 'Bearer Test')
       .send({
         number: 1,
         name: 'Batismo',
@@ -64,6 +69,7 @@ describe('Lessons', () => {
 
     const response = await request(app)
       .post('/lessons')
+      .set('Authorization', 'Bearer Test')
       .send({
         number: 1,
         name: 'Batismo',
@@ -75,6 +81,7 @@ describe('Lessons', () => {
   it('should return an error when create a lesson with reference an course that doesnt exists', async () => {
     const response = await request(app)
       .post('/lessons')
+      .set('Authorization', 'Bearer Test')
       .send({
         number: 1,
         name: 'Batismo',

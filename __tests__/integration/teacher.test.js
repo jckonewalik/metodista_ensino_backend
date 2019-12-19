@@ -11,6 +11,7 @@ describe('Teacher', () => {
     const user = await factory.create('User');
     const response = await request(app)
       .post('/teachers')
+      .set('Authorization', 'Bearer Test')
       .send({
         birthDate: '1991-06-19',
         firstName: 'João Carlos',
@@ -28,6 +29,7 @@ describe('Teacher', () => {
   it('should not create a new teacher without user', async () => {
     const response = await request(app)
       .post('/teachers')
+      .set('Authorization', 'Bearer Test')
       .send({
         birthDate: '1991-06-19',
         firstName: 'João Carlos',
@@ -43,6 +45,7 @@ describe('Teacher', () => {
     await factory.create('Teacher', { UserId: user.id });
     const response = await request(app)
       .post('/teachers')
+      .set('Authorization', 'Bearer Test')
       .send({
         birthDate: '1991-06-19',
         firstName: 'João Carlos',
@@ -56,14 +59,18 @@ describe('Teacher', () => {
   });
 
   it('should return a list of teachers', async () => {
-    const response = await request(app).get('/teachers');
+    const response = await request(app)
+      .get('/teachers')
+      .set('Authorization', 'Bearer Test');
     expect(response.status).toBe(200);
   });
 
   it('should return a teacher when pass the id as parameter', async () => {
     const user = await factory.create('User');
     const newTeacher = await factory.create('Teacher', { UserId: user.id });
-    const response = await request(app).get(`/teachers/${newTeacher.id}`);
+    const response = await request(app)
+      .get(`/teachers/${newTeacher.id}`)
+      .set('Authorization', 'Bearer Test');
 
     const { teacher } = response.body;
     expect(response.status).toBe(200);
@@ -72,7 +79,9 @@ describe('Teacher', () => {
   });
 
   it('should return not content status when pass and id that not exists', async () => {
-    const response = await request(app).get(`/teachers/1`);
+    const response = await request(app)
+      .get(`/teachers/1`)
+      .set('Authorization', 'Bearer Test');
     expect(response.status).toBe(204);
   });
 });

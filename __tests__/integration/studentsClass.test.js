@@ -20,6 +20,7 @@ describe('Students Class', () => {
     });
     const response = await request(app)
       .post('/students-classes')
+      .set('Authorization', 'Bearer Test')
       .send({
         name: 'Fundamentos da Fé',
         description: '2° sem - 2019',
@@ -45,6 +46,7 @@ describe('Students Class', () => {
     });
     const response = await request(app)
       .put(`/students-classes/${myClass.id}`)
+      .set('Authorization', 'Bearer Test')
       .send({
         teachers: [teacher1],
       });
@@ -55,6 +57,7 @@ describe('Students Class', () => {
   it('should return an error when try update class that doesnt exists', async () => {
     const response = await request(app)
       .put('/students-classes/1')
+      .set('Authorization', 'Bearer Test')
       .send({
         description: 'myClass.description',
         active: true,

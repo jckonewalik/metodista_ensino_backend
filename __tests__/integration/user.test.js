@@ -10,12 +10,12 @@ describe('User', () => {
   it('should create a new user', async () => {
     const response = await request(app)
       .post('/users')
+      .set('Authorization', 'Bearer Test')
       .send({
         name: 'João',
         email: 'jckonewalik@gmail.com',
         password: '123123',
       });
-
     const { user } = response.body;
     const newUser = await User.findByPk(user.id);
 
@@ -26,6 +26,7 @@ describe('User', () => {
     const user1 = await factory.create('User');
     const response = await request(app)
       .post('/users')
+      .set('Authorization', 'Bearer Test')
       .send({
         name: 'João',
         email: user1.email,
