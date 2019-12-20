@@ -1,4 +1,4 @@
-const { StudentsClass, Teacher, User } = require('../models');
+const { StudentsClass, Teacher, Student } = require('../models');
 const { sequelize } = require('../models');
 class StudentsClassController {
   async store(req, res) {
@@ -46,17 +46,35 @@ class StudentsClassController {
           as: 'classes',
           model: StudentsClass,
           attributes: ['id', 'name', 'description'],
+          include: [
+            {
+              model: Student,
+              as: 'students',
+              attributes: ['id'],
+              through: { attributes: [] },
+            },
+          ],
           where: { active: true },
           through: { attributes: [] },
         },
       ],
     });
-    return res.json({ studentsClasses: teacher.classes });
+    if (!teacher || teacher.classes.length < 1) {
+      return res.status(204).send();
+    }
+    return res.json({
+      studentsClasses: teacher.classes.map(studentClass => ({
+        id: studentClass.id,
+        name: studentClass.name,
+        description: studentClass.description,
+        amountOfStudents: studentClass.students.length,
+      })),
+    });
   }
 
   async update(req, res) {
     const { id } = req.params;
-    const { teachers, ...data } = req.body;
+    const { teachers, students, ...data } = req.body;
     let studentsClass = await StudentsClass.findByPk(id);
     if (!studentsClass) {
       return res.status(204).send();
@@ -72,6 +90,12 @@ class StudentsClassController {
           { transaction }
         );
       }
+      if (students) {
+        await studentsClass.setStudents(
+          students.map(student => student.id),
+          { transaction }
+        );
+      }
       await transaction.commit();
       studentsClass = await StudentsClass.findByPk(id, {
         include: [
@@ -81,10 +105,17 @@ class StudentsClassController {
             attributes: ['id', 'firstName', 'lastName'],
             through: { attributes: [] },
           },
+          {
+            model: Student,
+            as: 'students',
+            attributes: ['id', 'firstName', 'lastName'],
+            through: { attributes: [] },
+          },
         ],
       });
       return res.json({ studentsClass });
     } catch (error) {
+      console.log(error);
       if (transaction) {
         await transaction.rollback();
       }
