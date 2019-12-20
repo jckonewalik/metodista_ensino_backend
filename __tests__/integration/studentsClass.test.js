@@ -10,6 +10,10 @@ describe('Students Class', () => {
   it('should create a new class', async () => {
     const user1 = await factory.create('User');
     const teacher1 = await factory.create('Teacher', { UserId: user1.id });
+    const student1 = await factory.create('Student');
+    const student2 = await factory.create('Student');
+    const student3 = await factory.create('Student');
+
     const course = await Course.create({
       name: 'Fundamentos da Fé',
       active: true,
@@ -23,11 +27,15 @@ describe('Students Class', () => {
         active: true,
         CourseId: course.id,
         teachers: [teacher1],
+        students: [student1, student2, student3],
       });
-    const created = response.body.studentsClass;
-    const newClass = await StudentsClass.findOne({ where: { id: created.id } });
 
-    expect(newClass).not.toBe(undefined);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('studentsClass');
+    const { studentsClass } = response.body;
+    expect(studentsClass.id).not.toBe(undefined);
+    expect(studentsClass).toHaveProperty('amountOfStudents');
+    expect(studentsClass.amountOfStudents).toBe(3);
   });
 
   it('should update class when pass the id', async () => {

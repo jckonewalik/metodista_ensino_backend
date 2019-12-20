@@ -2,7 +2,7 @@ const { StudentsClass, Teacher, User } = require('../models');
 const { sequelize } = require('../models');
 class StudentsClassController {
   async store(req, res) {
-    const { teachers, ...data } = req.body;
+    const { teachers, students, ...data } = req.body;
     let transaction;
     try {
       transaction = await sequelize.transaction();
@@ -14,8 +14,20 @@ class StudentsClassController {
           { transaction }
         );
       }
+      if (students && students.length > 0) {
+        await studentsClass.addStudents(
+          students.map(student => student.id),
+          { transaction }
+        );
+      }
       await transaction.commit();
-      return res.json({ studentsClass });
+      const classStudents = await studentsClass.getStudents();
+      return res.json({
+        studentsClass: {
+          ...studentsClass.dataValues,
+          amountOfStudents: classStudents.length,
+        },
+      });
     } catch (error) {
       if (transaction) {
         await transaction.rollback();
