@@ -24,7 +24,7 @@ describe('User', () => {
         password: '123123',
       });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('user');
   });
   it('should not create a new user with same email', async () => {

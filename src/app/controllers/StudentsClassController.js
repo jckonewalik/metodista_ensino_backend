@@ -22,7 +22,7 @@ class StudentsClassController {
       }
       await transaction.commit();
       const classStudents = await studentsClass.getStudents();
-      return res.json({
+      return res.status(201).json({
         studentsClass: {
           ...studentsClass.dataValues,
           amountOfStudents: classStudents.length,

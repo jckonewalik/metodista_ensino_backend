@@ -30,7 +30,7 @@ describe('Students Class', () => {
         students: [student1, student2, student3],
       });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('studentsClass');
     const { studentsClass } = response.body;
     expect(studentsClass.id).not.toBe(undefined);

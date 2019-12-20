@@ -12,7 +12,7 @@ class TeacherController {
     }
     try {
       const teacher = await Teacher.create({ ...data, UserId });
-      return res.json({ teacher });
+      return res.status(201).json({ teacher });
     } catch (error) {
       return res.status(400).json({ message: error.message });
     }

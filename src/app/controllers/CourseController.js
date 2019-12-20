@@ -4,7 +4,7 @@ class CourseController {
     const { ...data } = req.body;
     try {
       const course = await Course.create(data);
-      return res.json({ course });
+      return res.status(201).json({ course });
     } catch (error) {
       return res.status(400).json({ message: error.errors[0].message });
     }

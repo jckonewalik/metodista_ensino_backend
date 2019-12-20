@@ -29,7 +29,7 @@ class LessonController {
     }
     try {
       const lesson = await Lesson.create({ ...data, number, CourseId });
-      return res.json({ lesson });
+      return res.status(201).json({ lesson });
     } catch (error) {
       return res.status(400).json({ message: `${error.message}` });
     }

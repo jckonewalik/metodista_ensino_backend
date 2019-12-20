@@ -11,7 +11,7 @@ class UserController {
         email,
         password,
       });
-      return res.json({ user });
+      return res.status(201).json({ user });
     } catch (error) {
       return res.status(400).json({ message: `${error.errors[0].message}` });
     }
