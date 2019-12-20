@@ -16,8 +16,7 @@ describe('Teacher', () => {
         birthDate: '1991-06-19',
         firstName: 'João Carlos',
         gender: 'male',
-        lastName: 'de Souza',
-        middleName: 'Konewalik',
+        lastName: 'Konewalik de Souza',
         UserId: user.id,
       });
     const created = response.body.teacher;
@@ -34,8 +33,7 @@ describe('Teacher', () => {
         birthDate: '1991-06-19',
         firstName: 'João Carlos',
         gender: 'male',
-        lastName: 'de Souza',
-        middleName: 'Konewalik',
+        lastName: 'Konewalik de Souza',
       });
     expect(response.status).toBe(400);
   });
@@ -50,8 +48,7 @@ describe('Teacher', () => {
         birthDate: '1991-06-19',
         firstName: 'João Carlos',
         gender: 'male',
-        lastName: 'de Souza',
-        middleName: 'Konewalik',
+        lastName: ' Konewalik de Souza',
         UserId: user.id,
       });
 

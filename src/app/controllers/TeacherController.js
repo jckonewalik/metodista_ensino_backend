@@ -1,14 +1,7 @@
 const { Teacher, StudentsClass } = require('../models');
 class TeacherController {
   async store(req, res) {
-    const {
-      firstName,
-      middleName,
-      lastName,
-      gender,
-      birthDate,
-      UserId,
-    } = req.body;
+    const { UserId, ...data } = req.body;
     if (UserId) {
       const teacher = await Teacher.findOne({ where: { UserId } });
       if (teacher) {
@@ -18,14 +11,7 @@ class TeacherController {
       }
     }
     try {
-      const teacher = await Teacher.create({
-        firstName,
-        middleName,
-        lastName,
-        gender,
-        birthDate,
-        UserId,
-      });
+      const teacher = await Teacher.create({ ...data, UserId });
       return res.json({ teacher });
     } catch (error) {
       return res.status(400).json({ message: error.message });
@@ -37,7 +23,6 @@ class TeacherController {
       attributes: [
         'id',
         ['first_name', 'firstName'],
-        ['middle_name', 'middleName'],
         ['last_name', 'lastName'],
       ],
     });

@@ -6,13 +6,13 @@ module.exports = {
       'roles',
       [
         {
-          role: 'ROLE_ADMIN',
+          id: 'ROLE_ADMIN',
           description: 'Administrator',
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
-          role: 'ROLE_TEACHER',
+          id: 'ROLE_TEACHER',
           description: 'Professor',
           created_at: new Date(),
           updated_at: new Date(),

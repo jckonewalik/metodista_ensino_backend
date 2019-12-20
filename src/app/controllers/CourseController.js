@@ -1,9 +1,9 @@
 const { Course } = require('../models');
 class CourseController {
   async store(req, res) {
-    const { name, active } = req.body;
+    const { ...data } = req.body;
     try {
-      const course = await Course.create({ name, active });
+      const course = await Course.create(data);
       return res.json({ course });
     } catch (error) {
       return res.status(400).json({ message: error.errors[0].message });

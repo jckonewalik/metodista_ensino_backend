@@ -20,9 +20,6 @@ module.exports = {
       last_name: {
         type: Sequelize.STRING,
       },
-      middle_name: {
-        type: Sequelize.STRING,
-      },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

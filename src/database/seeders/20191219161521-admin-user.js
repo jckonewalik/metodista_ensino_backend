@@ -6,7 +6,6 @@ module.exports = {
       'users',
       [
         {
-          id: 1,
           name: 'Administrator',
           email: 'administrator@metodistaensino.com.br',
           password_hash:
