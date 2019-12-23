@@ -7,6 +7,37 @@ describe('Students Class', () => {
   beforeEach(async () => {
     await truncate();
   });
+  it('should get the student class when pass the id as parameter', async () => {
+    const user1 = await factory.create('User');
+    const teacher1 = await factory.create('Teacher', { UserId: user1.id });
+    const student1 = await factory.create('Student');
+    const student2 = await factory.create('Student');
+    const student3 = await factory.create('Student');
+
+    const course = await Course.create({
+      name: 'Fundamentos da Fé',
+      active: true,
+    });
+    const newClass = await StudentsClass.create({
+      name: 'Class 1',
+      description: 'Class 1 Description',
+      CourseId: course.id,
+    });
+    await newClass.addStudents([student1, student2, student3]);
+    await newClass.addTeachers([teacher1]);
+
+    const response = await request(app)
+      .get(`/students-classes/${newClass.id}`)
+      .set('Authorization', 'Bearer Test');
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('studentsClass');
+    const { studentsClass } = response.body;
+    expect(studentsClass).toHaveProperty('students');
+    expect(studentsClass.students).toHaveLength(3);
+    expect(studentsClass).toHaveProperty('teachers');
+    expect(studentsClass.teachers).toHaveLength(1);
+  });
+
   it('should create a new class', async () => {
     const user1 = await factory.create('User');
     const teacher1 = await factory.create('Teacher', { UserId: user1.id });

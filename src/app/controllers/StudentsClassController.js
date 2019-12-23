@@ -36,6 +36,33 @@ class StudentsClassController {
     }
   }
 
+  async show(req, res) {
+    const { id } = req.params;
+
+    const studentsClass = await StudentsClass.findByPk(id, {
+      include: [
+        {
+          model: Teacher,
+          as: 'teachers',
+          attributes: ['id', 'firstName', 'lastName'],
+          through: { attributes: [] },
+        },
+        {
+          model: Student,
+          as: 'students',
+          attributes: ['id', 'firstName', 'lastName'],
+          through: { attributes: [] },
+        },
+      ],
+    });
+
+    if (!studentsClass) {
+      return res.status(204).send();
+    }
+
+    return res.json({ studentsClass });
+  }
+
   async list(req, res) {
     const { userId } = req;
     const teacher = await Teacher.findOne({
