@@ -43,4 +43,23 @@ describe('Course', () => {
     const { courses } = response.body;
     expect(courses.length).toBe(1);
   });
+
+  it('should return a list of lessons passing id of course', async () => {
+    const course = await Course.create({
+      name: 'CDV',
+      active: true,
+    });
+    await factory.create('Lesson', { CourseId: course.id });
+    await factory.create('Lesson', {
+      number: 2,
+      CourseId: course.id,
+    });
+
+    const response = await request(app)
+      .get(`/courses/${course.id}/lessons`)
+      .set('Authorization', 'Bearer Test');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('lessons');
+  });
 });

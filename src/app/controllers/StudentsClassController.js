@@ -20,7 +20,7 @@ class StudentsClassController {
           { transaction }
         );
       }
-      await transaction.commit();
+      transaction = await transaction.commit();
       const classStudents = await studentsClass.getStudents();
       return res.status(201).json({
         studentsClass: {
@@ -123,7 +123,7 @@ class StudentsClassController {
           { transaction }
         );
       }
-      await transaction.commit();
+      transaction = await transaction.commit();
       studentsClass = await StudentsClass.findByPk(id, {
         include: [
           {
@@ -142,7 +142,6 @@ class StudentsClassController {
       });
       return res.json({ studentsClass });
     } catch (error) {
-      console.log(error);
       if (transaction) {
         await transaction.rollback();
       }

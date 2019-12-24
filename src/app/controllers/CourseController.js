@@ -1,4 +1,4 @@
-const { Course } = require('../models');
+const { Course, Lesson } = require('../models');
 class CourseController {
   async store(req, res) {
     const { ...data } = req.body;
@@ -18,6 +18,16 @@ class CourseController {
     }
     const courses = await Course.findAll(where);
     return res.json({ courses });
+  }
+
+  async listLessons(req, res) {
+    const { id } = req.params;
+    const course = await Course.findByPk(id);
+    if (!course) {
+      return res.status(204).send();
+    }
+    const lessons = await course.getLessons();
+    return res.json({ lessons });
   }
 }
 
