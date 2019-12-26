@@ -16,6 +16,12 @@ class AttendanceController {
         .json({ message: 'Chamada sem registro de presença' });
     }
 
+    if (!TeacherId) {
+      return res
+        .status(400)
+        .json({ message: 'Informe o professor da aula' })
+    }
+
     let transaction;
     try {
       transaction = await sequelize.transaction();
