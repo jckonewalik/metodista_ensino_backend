@@ -3,6 +3,9 @@ const Sequelize = require('sequelize');
 const auth = require('../../firebase/firebase.utils');
 
 class SessionController {
+  async show(req, res) {
+    return res.status(200).json({ message: 'Token válido' });
+  }
   async store(req, res) {
     const { email, password } = req.body;
     const loginError = 'Invalid email or password'
@@ -21,6 +24,9 @@ class SessionController {
 
       return res.status(200).json({ user: { id, name, token } });
     } catch (error) {
+      if (error.code === 'auth/invalid-email') {
+        return res.status(400).json({ message: loginError })
+      }
       if (error.code === 'auth/user-not-found') {
         return res.status(400).json({ message: loginError });
       }

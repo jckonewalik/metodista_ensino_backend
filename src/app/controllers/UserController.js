@@ -13,6 +13,9 @@ class UserController {
       if (error.code === 'auth/user-not-found') {
         return res.status(400).json({ message: `Nenhum usuário cadastrado com o email ${email}` });
       }
+      if (error.code === 'auth/invalid-email') {
+        return res.status(400).json({ message: 'Informe um email válido' });
+      }
       return res.status(400).json({ message: error.message });
     }
   }

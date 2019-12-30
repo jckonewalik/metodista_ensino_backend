@@ -14,6 +14,8 @@ routes.put('/users/reset-password', UserController.update);
 
 routes.use(authMiddleware);
 
+routes.get('/sessions', SessionController.show);
+
 routes.post('/attendances', AttendanceController.store);
 
 routes.post('/users', UserController.store);
