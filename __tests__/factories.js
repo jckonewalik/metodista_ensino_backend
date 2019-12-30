@@ -11,7 +11,6 @@ const faker = require('faker');
 factory.define('User', User, {
   name: faker.name.findName(),
   email: faker.internet.email(),
-  password: faker.internet.password(),
 });
 
 factory.define('Lesson', Lesson, {

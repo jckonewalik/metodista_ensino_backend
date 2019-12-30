@@ -1,3 +1,4 @@
+const auth = require('../../src/firebase/firebase.utils');
 const request = require('supertest');
 const app = require('../../src/app');
 const truncate = require('../utils/truncate');
@@ -8,7 +9,8 @@ describe('Authentication', () => {
     await truncate();
   });
   it('should authenticate with valid credentials', async () => {
-    const user = await factory.create('User', { password: '123123' });
+    jest.spyOn(auth, 'signInWithEmailAndPassword').mockImplementation(() => { });
+    const user = await factory.create('User');
     const response = await request(app)
       .post('/sessions')
       .send({
@@ -19,6 +21,7 @@ describe('Authentication', () => {
   });
 
   it('should not authenticate with invalid user', async () => {
+    jest.spyOn(auth, 'signInWithEmailAndPassword').mockImplementation(() => { });
     const response = await request(app)
       .post('/sessions')
       .send({
@@ -28,18 +31,8 @@ describe('Authentication', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should not authenticate with invalid credentials', async () => {
-    const user = await factory.create('User', { password: '123123' });
-    const response = await request(app)
-      .post('/sessions')
-      .send({
-        email: user.email,
-        password: '123',
-      });
-    expect(response.status).toBe(400);
-  });
-
   it('should return jwt token when authenticated', async () => {
+    jest.spyOn(auth, 'signInWithEmailAndPassword').mockImplementation(() => { });
     const user = await factory.create('User', { password: '123123' });
     const response = await request(app)
       .post('/sessions')

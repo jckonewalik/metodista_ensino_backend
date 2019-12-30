@@ -1,8 +1,10 @@
 const request = require('supertest');
 const app = require('../../src/app');
-const { User, Role } = require('../../src/app/models');
+const { Role } = require('../../src/app/models');
 const truncate = require('../utils/truncate');
 const factory = require('../factories');
+const auth = require('../../src/firebase/firebase.utils');
+
 describe('User', () => {
   beforeEach(async () => {
     await truncate();
@@ -15,6 +17,7 @@ describe('User', () => {
     });
     await user1.setRoles([role]);
     const token = await user1.generateToken();
+    jest.spyOn(auth, 'createUserWithEmailAndPassword').mockImplementation(() => { });
     const response = await request(app)
       .post('/users')
       .set('Authorization', `Bearer ${token}`)
@@ -41,7 +44,6 @@ describe('User', () => {
       .send({
         name: 'João',
         email: user1.email,
-        password: '123123',
       });
     expect(response.status).toBe(400);
   });
@@ -51,8 +53,7 @@ describe('User', () => {
       .set('Authorization', 'Bearer Test')
       .send({
         name: 'João',
-        email: 'jckonewalik@gmail.com',
-        password: '123',
+        email: 'jckonewalik@gmail.com'
       });
     expect(response.status).toBe(401);
   });

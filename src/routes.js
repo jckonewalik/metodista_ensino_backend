@@ -10,6 +10,7 @@ const StudentController = require('./app/controllers/StudentController');
 const authMiddleware = require('./app/middlewares/auth');
 
 routes.post('/sessions', SessionController.store);
+routes.put('/users/reset-password', UserController.update);
 
 routes.use(authMiddleware);
 
