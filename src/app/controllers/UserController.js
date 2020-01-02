@@ -5,19 +5,23 @@ const auth = require('../../firebase/firebase.utils');
 class UserController {
   async update(req, res) {
     const { email } = req.body;
-    try {
-      await auth.sendPasswordResetEmail(email);
-      return res.status(200).json({ message: `Um email foi enviado para o endereço ${email}` });
-
-    } catch (error) {
-      if (error.code === 'auth/user-not-found') {
-        return res.status(400).json({ message: `Nenhum usuário cadastrado com o email ${email}` });
-      }
-      if (error.code === 'auth/invalid-email') {
-        return res.status(400).json({ message: 'Informe um email válido' });
-      }
-      return res.status(400).json({ message: error.message });
-    }
+    await auth
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        return res
+          .status(200)
+          .json({ message: `Um email foi enviado para o endereço ${email}` });
+      })
+      .catch(error => {
+        if (error.code === 'auth/user-not-found') {
+          return res.status(400).json({
+            message: `Nenhum usuário cadastrado com o email ${email}`,
+          });
+        }
+        if (error.code === 'auth/invalid-email') {
+          return res.status(400).json({ message: 'Informe um email válido' });
+        }
+      });
   }
   async store(req, res) {
     if (!req.roles || req.roles.indexOf('ROLE_ADMIN') == -1) {
@@ -25,7 +29,10 @@ class UserController {
     }
     const { name, email, password } = req.body;
     const foundUser = await User.findOne({
-      where: Sequelize.where(Sequelize.fn('lower', Sequelize.col('email')), Sequelize.fn('lower', email))
+      where: Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('email')),
+        Sequelize.fn('lower', email)
+      ),
     });
     if (foundUser) {
       return res.status(400).json({ message: 'O usuário já esta cadastrado' });
@@ -34,7 +41,7 @@ class UserController {
       await auth.createUserWithEmailAndPassword(email, password);
       const user = await User.create({
         name,
-        email
+        email,
       });
       return res.status(201).json({ user });
     } catch (error) {
