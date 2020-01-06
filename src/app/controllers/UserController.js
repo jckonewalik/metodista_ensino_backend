@@ -37,16 +37,22 @@ class UserController {
     if (foundUser) {
       return res.status(400).json({ message: 'O usuário já esta cadastrado' });
     }
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      const user = await User.create({
-        name,
-        email,
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(async () => {
+        try {
+          const user = await User.create({
+            name,
+            email,
+          });
+          return res.status(201).json({ user });
+        } catch (error) {
+          return res.status(400).json({ message: `${error.message}` });
+        }
+      })
+      .catch(error => {
+        return res.status(400).json({ message: `${error.message}` });
       });
-      return res.status(201).json({ user });
-    } catch (error) {
-      return res.status(400).json({ message: `${error.message}` });
-    }
   }
 }
 
