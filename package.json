@@ -5,17 +5,17 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js --ignore __tests__",
+    "dev": "cross-env PORT=5000 nodemon src/server.js --ignore __tests__",
     "pretest": "cross-env NODE_ENV=test sequelize db:migrate",
     "test": "cross-env NODE_ENV=test jest -i",
     "posttest": "cross-env NODE_ENV=test sequelize db:migrate:undo:all"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "factory-girl": "^5.0.4",
+    "firebase": "^7.6.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^7.14.0",
     "sequelize": "^5.21.2"
