@@ -16,7 +16,6 @@ factory.define('User', User, {
 factory.define('Lesson', Lesson, {
   number: 1,
   name: 'Pecado',
-  active: true,
 });
 
 factory.define('Teacher', Teacher, {
