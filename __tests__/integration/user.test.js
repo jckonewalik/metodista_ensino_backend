@@ -17,7 +17,9 @@ describe('User', () => {
     });
     await user1.setRoles([role]);
     const token = await user1.generateToken();
-    jest.spyOn(auth, 'createUserWithEmailAndPassword').mockImplementation(() => { });
+    jest
+      .spyOn(auth, 'createUserWithEmailAndPassword')
+      .mockImplementation(() => Promise.resolve({}));
     const response = await request(app)
       .post('/users')
       .set('Authorization', `Bearer ${token}`)
@@ -53,7 +55,7 @@ describe('User', () => {
       .set('Authorization', 'Bearer Test')
       .send({
         name: 'João',
-        email: 'jckonewalik@gmail.com'
+        email: 'jckonewalik@gmail.com',
       });
     expect(response.status).toBe(401);
   });

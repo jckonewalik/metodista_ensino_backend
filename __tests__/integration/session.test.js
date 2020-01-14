@@ -9,7 +9,9 @@ describe('Authentication', () => {
     await truncate();
   });
   it('should authenticate with valid credentials', async () => {
-    jest.spyOn(auth, 'signInWithEmailAndPassword').mockImplementation(() => { });
+    jest
+      .spyOn(auth, 'signInWithEmailAndPassword')
+      .mockImplementation(() => Promise.resolve({}));
     const user = await factory.create('User');
     const response = await request(app)
       .post('/sessions')
@@ -21,7 +23,9 @@ describe('Authentication', () => {
   });
 
   it('should not authenticate with invalid user', async () => {
-    jest.spyOn(auth, 'signInWithEmailAndPassword').mockImplementation(() => { });
+    jest
+      .spyOn(auth, 'signInWithEmailAndPassword')
+      .mockImplementation(() => Promise.resolve({}));
     const response = await request(app)
       .post('/sessions')
       .send({
@@ -32,7 +36,9 @@ describe('Authentication', () => {
   });
 
   it('should return jwt token when authenticated', async () => {
-    jest.spyOn(auth, 'signInWithEmailAndPassword').mockImplementation(() => { });
+    jest
+      .spyOn(auth, 'signInWithEmailAndPassword')
+      .mockImplementation(() => Promise.resolve({}));
     const user = await factory.create('User', { password: '123123' });
     const response = await request(app)
       .post('/sessions')

@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN,
   });
   Course.associate = function(models) {
-    Course.hasMany(models.Lesson);
+    Course.hasMany(models.Lesson, { as: 'lessons' });
   };
   return Course;
 };

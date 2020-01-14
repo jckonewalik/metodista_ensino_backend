@@ -20,8 +20,7 @@ routes.post('/attendances', AttendanceController.store);
 
 routes.post('/users', UserController.store);
 
-routes.get('/lessons', LessonController.list);
-routes.post('/lessons', LessonController.store);
+routes.delete('/lessons/:id', LessonController.delete);
 
 routes.post('/teachers', TeacherController.store);
 routes.get('/teachers', TeacherController.list);
@@ -35,7 +34,10 @@ routes.put('/students-classes/:id', StudentsClassController.update);
 
 routes.post('/students', StudentController.store);
 
-routes.get('/courses', CourseController.show);
+routes.get('/courses', CourseController.list);
+routes.get('/courses/:id', CourseController.show);
+routes.put('/courses/:id', CourseController.update);
+routes.delete('/courses/:id', CourseController.delete);
 routes.get('/courses/:id/lessons', CourseController.listLessons);
 routes.post('/courses', CourseController.store);
 
