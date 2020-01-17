@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Role } = require('../models');
 const Sequelize = require('sequelize');
 const auth = require('../../firebase/firebase.utils');
 
@@ -19,15 +19,25 @@ class SessionController {
               Sequelize.fn('lower', Sequelize.col('email')),
               Sequelize.fn('lower', email)
             ),
+            include: [
+              {
+                model: Role,
+                as: 'roles',
+                attributes: ['id'],
+                through: { attributes: [] },
+              },
+            ],
           });
           if (!user) {
             return res.status(400).json({ message: loginError });
           }
 
-          const { id, name } = user;
+          const { id, name, roles } = user;
           const token = await user.generateToken();
 
-          return res.status(200).json({ user: { id, name, token } });
+          return res
+            .status(200)
+            .json({ user: { id, name, token, roles: roles.map(r => r.id) } });
         } catch (error) {
           return res.status(400).json({ message: error.message });
         }
