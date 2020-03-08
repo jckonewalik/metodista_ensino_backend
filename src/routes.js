@@ -17,6 +17,7 @@ routes.use(authMiddleware);
 routes.get('/sessions', SessionController.show);
 
 routes.post('/attendances', AttendanceController.store);
+routes.get('/attendances', AttendanceController.find);
 
 routes.post('/users', UserController.store);
 

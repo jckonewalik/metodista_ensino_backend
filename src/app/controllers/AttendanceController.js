@@ -1,6 +1,26 @@
 const { Attendance, AttendanceAppointment } = require('../models');
 const { sequelize } = require('../models');
 class AttendanceController {
+  async find(req, res) {
+    const { date, StudentsClassId } = req.query;
+
+    const attendance = await Attendance.findOne({
+      where: Sequelize.where(
+        Sequelize.fn('lower', Sequelize.col('email')),
+        Sequelize.fn('lower', email)
+      ),
+      include: [
+        {
+          model: Role,
+          as: 'roles',
+          attributes: ['id'],
+          through: { attributes: [] },
+        },
+      ],
+    });
+    console.log(date, StudentsClassId);
+    return res.status(200).send();
+  }
   async store(req, res) {
     const {
       date,
@@ -17,9 +37,7 @@ class AttendanceController {
     }
 
     if (!TeacherId) {
-      return res
-        .status(400)
-        .json({ message: 'Informe o professor da aula' })
+      return res.status(400).json({ message: 'Informe o professor da aula' });
     }
 
     let transaction;
