@@ -9,6 +9,6 @@ module.exports = {
     );
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropColumn('students', 'phone_number');
+    return queryInterface.removeColumn('students', 'phone_number');
   },
 };

@@ -1,25 +1,48 @@
-const { Attendance, AttendanceAppointment } = require('../models');
-const { sequelize } = require('../models');
+const { Attendance, AttendanceAppointment, StudentsClass } = require('../models');
+const { sequelize, Sequelize } = require('../models');
 class AttendanceController {
   async find(req, res) {
+    const Op = Sequelize.Op;
     const { date, StudentsClassId } = req.query;
 
+    if (!date || !StudentsClassId) {
+      return res.status(400).json({ message: 'Informe a data e a classe da busca'});
+    }
+
+    const dateStart = new Date(date);
+    if (isNaN(dateStart.getTime())) {  
+      return res.status(400).json({ message: 'Infome uma data valida para busca'});
+    }
+    
+    let dateEnd = new Date(dateStart);
+    dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
     const attendance = await Attendance.findOne({
-      where: Sequelize.where(
-        Sequelize.fn('lower', Sequelize.col('email')),
-        Sequelize.fn('lower', email)
-      ),
       include: [
         {
-          model: Role,
-          as: 'roles',
-          attributes: ['id'],
-          through: { attributes: [] },
+          model: StudentsClass,
+          where: {
+            id: StudentsClassId
+          }
         },
+        {
+          model: AttendanceAppointment,
+          as: 'appointments'
+        }
       ],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.gte]: dateStart,
+            [Op.lt]: dateEnd
+          }
+        }
+      }
     });
-    console.log(date, StudentsClassId);
-    return res.status(200).send();
+    if (attendance) {
+      return res.status(200).json(attendance);
+    } else {
+      return res.status(204).json({ message: "Nenhuma chamada realizada nessa data" })
+    }
   }
   async store(req, res) {
     const {
