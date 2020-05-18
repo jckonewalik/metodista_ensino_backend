@@ -1,4 +1,4 @@
-const { Attendance, AttendanceAppointment, StudentsClass } = require('../models');
+const { Attendance, AttendanceAppointment, Teacher, Lesson, Student } = require('../models');
 const { sequelize, Sequelize } = require('../models');
 class AttendanceController {
   async find(req, res) {
@@ -6,27 +6,36 @@ class AttendanceController {
     const { date, StudentsClassId } = req.query;
 
     if (!date || !StudentsClassId) {
-      return res.status(400).json({ message: 'Informe a data e a classe da busca'});
+      return res.status(400).json({ message: 'Informe a data e a classe da busca' });
     }
 
     const dateStart = new Date(date);
-    if (isNaN(dateStart.getTime())) {  
-      return res.status(400).json({ message: 'Infome uma data valida para busca'});
+    if (isNaN(dateStart.getTime())) {
+      return res.status(400).json({ message: 'Infome uma data valida para busca' });
     }
-    
+
     let dateEnd = new Date(dateStart);
     dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
     const attendance = await Attendance.findOne({
       include: [
         {
-          model: StudentsClass,
-          where: {
-            id: StudentsClassId
-          }
+          model: Teacher,
+          attributes: ['id', ['first_name', 'name']]
+        },
+        {
+          model: Lesson,
+          attributes: ['id', 'name']
         },
         {
           model: AttendanceAppointment,
-          as: 'appointments'
+          as: 'appointments',
+          attributes: ['id', 'status'],
+          include: [
+            {
+              model: Student,
+              attributes: ['id', 'firstName', 'lastName']
+            }
+          ]
         }
       ],
       where: {
@@ -46,11 +55,12 @@ class AttendanceController {
   }
   async store(req, res) {
     const {
-      date,
+      Lesson,
       StudentsClassId,
-      TeacherId,
-      LessonId,
+      Teacher,
       appointments,
+      date,
+      id
     } = req.body;
 
     if (!appointments || appointments.length < 1) {
@@ -59,7 +69,7 @@ class AttendanceController {
         .json({ message: 'Chamada sem registro de presença' });
     }
 
-    if (!TeacherId) {
+    if (!Teacher) {
       return res.status(400).json({ message: 'Informe o professor da aula' });
     }
 
@@ -70,18 +80,18 @@ class AttendanceController {
         {
           date,
           StudentsClassId,
-          TeacherId,
-          LessonId,
+          TeacherId: Teacher.id,
+          LessonId: Lesson && Lesson.id,
         },
         { transaction }
       );
 
       for (const x in appointments) {
-        const { StudentId, status } = appointments[x];
+        const { Student, status } = appointments[x];
         await AttendanceAppointment.create(
           {
             AttendanceId: attendance.id,
-            StudentId,
+            StudentId: Student && Student.id,
             status,
           },
           { transaction }
