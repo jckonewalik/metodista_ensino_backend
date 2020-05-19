@@ -1,56 +1,27 @@
 const { Attendance, AttendanceAppointment, Teacher, Lesson, Student } = require('../models');
 const { sequelize, Sequelize } = require('../models');
+
+const Op = Sequelize.Op;
+
+const service = require('../services/AttendanceService');
+
 class AttendanceController {
   async find(req, res) {
-    const Op = Sequelize.Op;
     const { date, StudentsClassId } = req.query;
 
     if (!date || !StudentsClassId) {
       return res.status(400).json({ message: 'Informe a data e a classe da busca' });
     }
 
-    const dateStart = new Date(date);
-    if (isNaN(dateStart.getTime())) {
-      return res.status(400).json({ message: 'Infome uma data valida para busca' });
-    }
-
-    let dateEnd = new Date(dateStart);
-    dateEnd = dateEnd.setDate(dateEnd.getDate() + 1);
-    const attendance = await Attendance.findOne({
-      include: [
-        {
-          model: Teacher,
-          attributes: ['id', ['first_name', 'name']]
-        },
-        {
-          model: Lesson,
-          attributes: ['id', 'name']
-        },
-        {
-          model: AttendanceAppointment,
-          as: 'appointments',
-          attributes: ['id', 'status'],
-          include: [
-            {
-              model: Student,
-              attributes: ['id', 'firstName', 'lastName']
-            }
-          ]
-        }
-      ],
-      where: {
-        date: {
-          [Op.and]: {
-            [Op.gte]: dateStart,
-            [Op.lt]: dateEnd
-          }
-        }
+    try {
+      const attendance = await service.findAttendance({ StudentsClassId, date });
+      if (attendance) {
+        return res.status(200).json(attendance);
+      } else {
+        return res.status(204).json({ message: 'Nenhuma chamada encontrada' });
       }
-    });
-    if (attendance) {
-      return res.status(200).json(attendance);
-    } else {
-      return res.status(204).json({ message: "Nenhuma chamada realizada nessa data" })
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
     }
   }
   async store(req, res) {
