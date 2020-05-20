@@ -18,4 +18,16 @@ const findAttendance = async ({ StudentsClassId, date }) => {
   }
 }
 
-module.exports = { findAttendance };
+const saveOrUpdate = async (attendance) => {
+  try {
+    if (!attendance.id) {
+      return repository.save(attendance);
+    } else {
+      return repository.update(attendance);
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+module.exports = { findAttendance, saveOrUpdate };

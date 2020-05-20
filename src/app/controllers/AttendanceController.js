@@ -1,8 +1,3 @@
-const { Attendance, AttendanceAppointment, Teacher, Lesson, Student } = require('../models');
-const { sequelize, Sequelize } = require('../models');
-
-const Op = Sequelize.Op;
-
 const service = require('../services/AttendanceService');
 
 class AttendanceController {
@@ -43,38 +38,17 @@ class AttendanceController {
     if (!Teacher) {
       return res.status(400).json({ message: 'Informe o professor da aula' });
     }
-
-    let transaction;
     try {
-      transaction = await sequelize.transaction();
-      const attendance = await Attendance.create(
-        {
-          date,
-          StudentsClassId,
-          TeacherId: Teacher.id,
-          LessonId: Lesson && Lesson.id,
-        },
-        { transaction }
-      );
-
-      for (const x in appointments) {
-        const { Student, status } = appointments[x];
-        await AttendanceAppointment.create(
-          {
-            AttendanceId: attendance.id,
-            StudentId: Student && Student.id,
-            status,
-          },
-          { transaction }
-        );
-      }
-
-      transaction = await transaction.commit();
+      const attendance = await service.saveOrUpdate({
+        Lesson,
+        StudentsClassId,
+        Teacher,
+        appointments,
+        date,
+        id
+      });
       return res.status(201).json({ attendance });
     } catch (error) {
-      if (transaction) {
-        await transaction.rollback();
-      }
       return res.status(400).json({ message: error.message });
     }
   }
