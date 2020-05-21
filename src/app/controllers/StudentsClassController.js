@@ -1,4 +1,4 @@
-const { StudentsClass, Teacher, Student } = require('../models');
+const { StudentsClass, Teacher, Student, Course, Lesson } = require('../models');
 const { sequelize } = require('../models');
 class StudentsClassController {
   async store(req, res) {
@@ -40,7 +40,19 @@ class StudentsClassController {
     const { id } = req.params;
 
     const studentsClass = await StudentsClass.findByPk(id, {
+      attributes: ['id', 'name', 'description'],
       include: [
+        {
+          model: Course,
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: Lesson,
+              as: 'lessons',
+              attributes: ['id', 'number', 'name']
+            }
+          ]
+        },
         {
           model: Teacher,
           as: 'teachers',
