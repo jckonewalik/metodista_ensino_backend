@@ -45,7 +45,8 @@ class AttendanceController {
         Teacher,
         appointments,
         date,
-        id
+        id,
+        userId: req.userId
       });
       return res.status(201).json({ attendance });
     } catch (error) {

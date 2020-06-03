@@ -56,6 +56,8 @@ const save = async (attendance) => {
         StudentsClassId: attendance.StudentsClassId,
         TeacherId: attendance.Teacher.id,
         LessonId: attendance.Lesson && attendance.Lesson.id,
+        createdBy: attendance.userId,
+        updatedBy: attendance.userId
       },
       { transaction }
     );
@@ -90,6 +92,7 @@ const update = async (attendance) => {
       {
         TeacherId: attendance.Teacher.id,
         LessonId: attendance.Lesson && attendance.Lesson.id,
+        updatedBy: attendance.userId
       },
       {
         where: { id: attendance.id }

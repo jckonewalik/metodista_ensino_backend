@@ -4,10 +4,12 @@ module.exports = (sequelize, DataTypes) => {
     'Attendance',
     {
       date: DataTypes.DATE,
+      createdBy: DataTypes.STRING,
+      updatedBy: DataTypes.STRING
     },
     {}
   );
-  Attendance.associate = function(models) {
+  Attendance.associate = function (models) {
     Attendance.belongsTo(models.StudentsClass);
     Attendance.belongsTo(models.Teacher);
     Attendance.belongsTo(models.Lesson);
